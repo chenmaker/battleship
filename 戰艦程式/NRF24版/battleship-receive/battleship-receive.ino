@@ -1,7 +1,8 @@
 #include <SPI.h>
-#include "RF24.h"
-#include <SparkFun_TB6612.h>
-#include <Servo.h>
+#include "RF24.h"//nrf24
+#include <SparkFun_TB6612.h>//馬達控制
+#include <Thermistor.h>//溫度
+#include <Servo.h>//伺服馬達
 Servo sf0;
 Servo sf1;
 Servo sf2;
@@ -9,6 +10,12 @@ Servo sf3;
 Servo sf4;
 Servo sf5;
 Servo sru;
+//溫度
+Thermistor temp(0);
+Thermistor temp1(1);
+int temperature = temp.getTemp();
+int temperature1 = temp1.getTemp();
+//nrf24
 RF24 rf24(49,48);
 const byte addr[] = "CHEN";
 const byte pipe = 1;  // 指定通道編號
@@ -16,7 +23,7 @@ int commaPosition;
 String message;
 int any[40];
 int e;
-int L0=6;
+int L0=46,L1=44,L2=47,L3=45,L4=43,L5=23,L6=25,L7=27;
 //TB6612
 #define AIN1 5  // 控制輸入A1
 #define AIN2 6   // 控制輸入A2
@@ -45,16 +52,31 @@ char data[10];
 int index,panAngle,tiltAngle;
 char *p;
 void setup() {
+  Serial.begin(9600);
   //PWM 8 9 10 11 12 13 44 45 46
-  sf0.attach(13);
+  sf0.attach(45);
   sf1.attach(12);
   sf2.attach(11);
   sf3.attach(10);
   sf4.attach(9);
   sf5.attach(8);
-  sru.attach(45);
+  sru.attach(13);
+  sru.write(90);
+  sf0.write(90);
+  sf1.write(90);
+  sf2.write(90);
+  sf3.write(90);
+  //LED
   pinMode(L0,OUTPUT);
-  Serial.begin(9600);
+  pinMode(L1,OUTPUT);
+  pinMode(L2,OUTPUT);
+  pinMode(L3,OUTPUT);
+  pinMode(L4,OUTPUT);
+  pinMode(L5,OUTPUT);
+  pinMode(L6,OUTPUT);
+  pinMode(L7,OUTPUT);
+  digitalWrite(L1, HIGH);
+  //nrf24
   rf24.begin();
   rf24.setChannel(83);  // 設定頻道編號
   rf24.setPALevel(RF24_PA_MAX);
@@ -77,8 +99,23 @@ void loop() {
    }
    mg();
    en=any[5];
-   motor1.drive(en);       
-   motor2.drive(en);   
+   int enn;
+   if(en<=270&&en>=230){
+    enn=0;
+    motor1.drive(0);       
+    motor2.drive(0);
+    }else if(en>=271){
+   enn=-(en-271);
+    motor1.drive(enn);       
+    motor2.drive(enn);
+    }else if(en<=229){
+    enn=229-en;
+       motor1.drive(enn);       
+       motor2.drive(enn);
+      }
+   Serial.print("enn="); 
+   Serial.println(enn); 
+   //delay(1000);
    sru.write(any[4]);
    sf0.write(any[0]);
    sf1.write(any[1]);
@@ -86,5 +123,18 @@ void loop() {
    sf3.write(any[3]);
   //sf4.write(any[4]);
   //sf5.write(any[5]);
-  digitalWrite(L0, LOW);
+  digitalWrite(L0, LOW); 
+  Serial.print("The sensor temperature is: ");
+  Serial.print(temperature);
+  Serial.println("C");
+  Serial.print("The sensor temperature1 is: ");
+  Serial.print(temperature1);
+  Serial.println("C");
+  if(temperature>40){digitalWrite(L2, HIGH);
+  }else if(temperature<50&&temperature>40){digitalWrite(L3, HIGH);
+  }else if(temperature>50){digitalWrite(L4, HIGH);}
+   if(temperature1>40){digitalWrite(L5, HIGH);
+  }else if(temperature1<50&&temperature1>40){digitalWrite(L6, HIGH);
+  }else if(temperature1>50){digitalWrite(L7, HIGH);}
+
 }

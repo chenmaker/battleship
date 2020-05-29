@@ -23,5 +23,4 @@ void mg(){
       }
    } 
    while(commaPosition>=0);
-  
   }

@@ -42,7 +42,7 @@ void loop() {
  // f4=analogRead(A4)/5.6;
  // f5=analogRead(A5)/5.6;
   ru=analogRead(A4)/5.6;
-  en=analogRead(A5)/4;
+  en=analogRead(A5)/2;
   Serial.print("fort=");
   Serial.println(f0);
   Serial.print("fort1=");
