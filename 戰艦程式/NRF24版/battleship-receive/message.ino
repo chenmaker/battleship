@@ -4,7 +4,6 @@ void mg(){
       if(commaPosition != -1)
       {
          Serial.println(message.substring(0,commaPosition));
-
          if(e<=5){
          any[e]=message.toInt();
          Serial.print("any["+String(e)+"]=");
