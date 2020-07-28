@@ -36,12 +36,14 @@ const int offsetB = 1;  // 正反轉設定B，可能值為1或-1。
 Motor motor1 = Motor(AIN1, AIN2, PWMA, offsetA, STBY);
 Motor motor2 = Motor(BIN1, BIN2, PWMB, offsetB, STBY);
 //控制板腳位
-int f0 ;//A0fort0
-int f1 ;//A1fort1
-int f2 ;//A2fort2
-int f3 ;//A3fort3
-int ru ;//A6rudder
-int en ;//A7engine
+int f0=90;//A0fort0
+int f1=90;//A1fort1
+int f2=90;//A2fort2
+int f3=90;//A3fort3
+int ru=90;//A6rudder
+int en=255;//A7engine
+int enn=255;
+int sig=0;
 //message
 char data[10];
 int index,panAngle,tiltAngle;
@@ -79,10 +81,15 @@ void setup() {
   rf24.openReadingPipe(pipe, addr);  // 開啟通道和位址
   rf24.startListening();  // 開始監聽無線廣播
   Serial.println("nRF24L01 ready!");
+  any[1]=90;
+  any[2]=90;
+  any[3]=90;
+  any[4]=90;
+  any[5]=255;
 }
 
 void loop() {   
-  if (rf24.available(&pipe)) {
+  while (rf24.available(&pipe)) {
     char msg[40]="";
     rf24.read(&msg, sizeof(msg));
     Serial.println(msg); // 顯示訊息內容 
@@ -90,11 +97,15 @@ void loop() {
       message+=msg[i];
       //Serial.println(message); 
       digitalWrite(L0, HIGH);
+      sig=0;
       }
    }
+   sig=1;
+   if(sig==1){
+    any[5]=255;
+    }
    mg();
    en=any[5];
-   int enn;
    if(en>=225&&en<=280){//置中
     enn=0;
     motor1.drive(0);       
@@ -110,7 +121,7 @@ void loop() {
     digitalWrite(L6, LOW);
     digitalWrite(L7, LOW);
     }else if(en<=225){//前進
-   enn=225-en;
+    enn=225-en;
     motor1.drive(enn);       
     motor2.drive(enn);
     digitalWrite(L5, LOW);
