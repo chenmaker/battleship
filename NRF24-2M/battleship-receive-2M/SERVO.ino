@@ -1,0 +1,53 @@
+//初始設定servo脈衝寬度
+//初始設定伺服馬達角度
+void SERVO(){
+ if (ServoSwitch==true){
+  sru1.attach(10,400,2400);
+  //sru2.attach(12,400,2400);
+  sf1.attach(3,500,2500);
+  sf2.attach(5,500,2500);
+  sf3.attach(7,500,2500);
+  //sf4.attach(9,500,2500);
+  //sf5.attach(11,500,2500);
+  //sf6.attach(13,500,2500);
+  sru1.write(90);
+  //sru2.write(90);
+  sf1.writeMicroseconds(1500);
+  sf2.writeMicroseconds(1500);
+  sf3.writeMicroseconds(1500);
+  //sf4.writeMicroseconds(1500);
+  //sf5.writeMicroseconds(1500);
+  //sf6.writeMicroseconds(1500);
+  any[2]=90;
+  any[3]=135;
+  any[4]=135;
+  any[5]=135;
+  //any[6]=135;
+  //any[7]=135;
+  //any[8]=135;
+  }else if(ServoSwitch=false){
+    sru1.attach(10,400,2400);
+    //sru2.attach(12,400,2400);
+    sf1.attach(3);
+    sf2.attach(5);
+    sf3.attach(7);
+    //sf4.attach(9);
+    //sf5.attach(11);
+    //sf6.attach(13);
+    sru1.write(90);
+    //sru2.write(90);
+    sf1.write(90);
+    sf2.write(90);
+    sf3.write(90);
+    //sf4.write(90);
+    //sf5.write(90);
+    //sf6.write(90);   
+    any[2]=90;
+    any[3]=90;
+    any[4]=90;
+    any[5]=90;
+    //any[6]=90;
+    //any[7]=90;
+    //any[8]=90;
+    } 
+  }
